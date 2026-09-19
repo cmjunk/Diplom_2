@@ -9,26 +9,19 @@ from utils.data_generator import generate_user
 class TestUserRegister:
 
     @allure.title("Можно создать уникального пользователя")
-    def test_create_unique_user_success(self, api):
-        user_data = generate_user()
-        response = api.register_user(user_data)
+    def test_create_unique_user_success(self, registered_user):
+        response = registered_user["response"]
         body = response.json()
 
-        try:
-            assert response.status_code == 200, "Код ответа должен быть 200"
-            assert body["success"] is True
-            assert "accessToken" in body
-            assert "refreshToken" in body
-            assert body["user"]["email"] == user_data["email"]
-            assert body["user"]["name"] == user_data["name"]
-        finally:
-            token = body.get("accessToken")
-            if token:
-                api.delete_user(token)
+        assert response.status_code == 200, "Код ответа должен быть 200"
+        assert body["success"] is True
+        assert "accessToken" in body
+        assert "refreshToken" in body
+        assert body["user"]["email"] == registered_user["data"]["email"]
+        assert body["user"]["name"] == registered_user["data"]["name"]
 
     @allure.title("Нельзя создать пользователя, который уже зарегистрирован")
     def test_create_user_that_already_exists(self, api, registered_user):
-        # повторно регистрируем те же данные, что и в фикстуре registered_user
         response = api.register_user(registered_user["data"])
         body = response.json()
 
