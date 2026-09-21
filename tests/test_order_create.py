@@ -1,12 +1,6 @@
 import allure
 import pytest
 
-@pytest.fixture
-def ingredient_ids(api):
-    response = api.get_ingredients()
-    data = response.json()["data"]
-    return [data[0]["_id"], data[1]["_id"]]
-
 @allure.epic("Stellar Burgers API")
 @allure.feature("Создание заказа")
 class TestOrderCreate:

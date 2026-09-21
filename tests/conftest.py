@@ -31,3 +31,9 @@ def registered_user(api):
     token = user.get("accessToken")
     if token:
         api.delete_user(token)
+
+@pytest.fixture
+def ingredient_ids(api):
+    response = api.get_ingredients()
+    data = response.json()["data"]
+    return [data[0]["_id"], data[1]["_id"]]
